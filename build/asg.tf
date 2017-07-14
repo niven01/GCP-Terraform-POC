@@ -1,10 +1,9 @@
 resource "google_compute_subnetwork" "private" {
   name          = "${var.platform-name}-${var.poc-region}"
-  ip_cidr_range = "10.10.0.0/24"
+  ip_cidr_range = "${var.iprange}"
   network       = "${google_compute_network.platform.self_link}"
   region        = "${var.poc-region}"
 }
-
 
 resource "google_compute_instance_template" "web" {
   name           = "${var.asg_name}"
@@ -18,7 +17,7 @@ resource "google_compute_instance_template" "web" {
   }
 
   network_interface {
-    network = "default"
+    subnetwork = "${google_compute_subnetwork.private.name}"
 
     access_config {
       # Ephemeral
@@ -31,9 +30,36 @@ resource "google_compute_instance_template" "web" {
 apt-get update
 apt-get install -y apache2
 cat <<EOF > /var/www/html/index.html
-<html><body><h1>Hello GCP World</h1>
-<p>This page was created from a simple startup script!</p>
-</body></html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Hello GCP Interviewers</title>
+  <style>
+    body {
+      color: #FFA500;
+      background-color: #0188cc;
+      font-family: Arial, sans-serif;
+      font-size: 14px;
+    }
+    h1 {
+      font-size: 500%;
+      font-weight: normal;
+      margin-bottom: 0;
+    }
+    h2 {
+      font-size: 200%;
+      font-weight: normal;
+      margin-bottom: 0;
+    }
+  </style>
+</head>
+<body>
+  <div align="center">
+    <h1>Hello Rackspace GCP World</h1>
+    <p>This page was created from a simple startup script!</p>
+  </div>
+</body>
+</html>
 SCRIPT
   }
 
@@ -53,11 +79,12 @@ resource "google_compute_target_pool" "web" {
   ]
 }
 
-resource "google_compute_forwarding_rule" "web" {
+resource "google_compute_forwarding_rule" "port-80-forwarding-web" {
   name       = "port-80"
   target     = "${google_compute_target_pool.web.self_link}"
   port_range = "80"
 }
+
 
 resource "google_compute_instance_group_manager" "web" {
   name = "${var.group_manager_name}"

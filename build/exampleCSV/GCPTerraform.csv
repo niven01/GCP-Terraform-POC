@@ -1,0 +1,2 @@
+Timestamp,Region,Zone,Platform Name,CIDR Range,Autoscaler Name,Machine Type,Load Balancer name,Group manager name,Group manager zone,Scaling Max,Scaling Min
+2017/07/21 12:07:30 PM GMT+1,europe-west2,europe-west2-a,poc,10.10.0.0/16,web,f1-micro,web-lb,web-mgr,europe-west2-a,3,2
