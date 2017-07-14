@@ -3,7 +3,7 @@
 variable "poc-region"               { default = "europe-west2" }
 variable "poc-zone"                 { default = "europe-west2-a" }
 variable "poc-project"              { default = "build-172714" }
-variable "platform-name"            { default = "poc-test"  }
+variable "platform-name"            { default = "poc"  }
 
 #asg
 variable "asg_name"                 { default = "web" }
